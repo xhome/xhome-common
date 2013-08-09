@@ -2,6 +2,8 @@ package org.xhome.common;
 
 import java.sql.Timestamp;
 
+import org.xhome.common.constant.Status;
+
 /**
  * @project common
  * @author jhat

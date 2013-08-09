@@ -1,4 +1,4 @@
-package org.xhome.common;
+package org.xhome.common.constant;
 
 /**
  * @project common

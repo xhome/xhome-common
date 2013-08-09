@@ -1,6 +1,6 @@
 package org.xhome.common.result;
 
-import org.xhome.common.Status;
+import org.xhome.common.constant.Status;
 
 /**
  * @project common

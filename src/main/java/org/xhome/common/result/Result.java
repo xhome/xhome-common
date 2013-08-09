@@ -1,7 +1,8 @@
 package org.xhome.common.result;
 
 import java.io.Serializable;
-import org.xhome.common.Status;
+
+import org.xhome.common.constant.Status;
 
 /**
  * @project common
