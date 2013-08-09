@@ -16,7 +16,7 @@ public abstract class Base implements java.io.Serializable {
 	protected Long				modifier;
 	protected Timestamp			created;
 	protected Timestamp			modified;
-	protected Long				version				= 0L;
+	protected Short				version				= 0;
 	protected Short				status				= Status.OK;
 	
 	public void setId(Long id) {
@@ -67,11 +67,11 @@ public abstract class Base implements java.io.Serializable {
 		return status;
 	}
 	
-	public void setVersion(Long version) {
+	public void setVersion(Short version) {
 		this.version = version;
 	}
 	
-	public Long getVersion() {
+	public Short getVersion() {
 		return version;
 	}
 	
