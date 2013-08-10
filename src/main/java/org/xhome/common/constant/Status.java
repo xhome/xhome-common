@@ -21,6 +21,8 @@ public final class Status {
 	public final static short	VERSION_NOT_MATCH	= 8;	// 版本不匹配
 	public final static short	PASSWD_NOT_MATCH	= 9;	// 密码不匹配
 	public final static short	CODE_NOT_MATCH		= 10;	// 验证码不匹配
+	
+	public final static short	BLOCKED				= 11;	// 操作被阻断
 															
 	public final static short	SUCCESS				= 0;	// 操作成功
 	public final static short	ERROR				= 1;	// 操作失败
