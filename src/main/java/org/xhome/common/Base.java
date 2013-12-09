@@ -1,6 +1,8 @@
 package org.xhome.common;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.xhome.common.constant.Status;
 
@@ -81,4 +83,17 @@ public abstract class Base implements java.io.Serializable {
 		this.version++;
 	}
 	
+	public String getModifiedStr() {
+		if (modified == null)
+			return "";
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return format.format(modified);
+	}
+
+	public String getCreatedStr() {
+		if (created == null)
+			return "";
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		return format.format(created);
+	}
 }
