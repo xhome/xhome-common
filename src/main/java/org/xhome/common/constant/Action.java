@@ -5,24 +5,22 @@ package org.xhome.common.constant;
  * @author jhat
  * @email cpf624@126.com
  * @date Aug 9, 201311:22:47 PM
- * @description 
+ * @description
  */
 public final class Action {
 
 	public final static short OTHER = 0;
 	public final static short ADD = 1;
-	public final static short UPDATE = 2;
-	public final static short LOCK = 3;
-	public final static short UNLOCK = 4;
-	public final static short REMOVE = 5;
-	public final static short DELETE = 6;
-	public final static short IS_EXISTS = 7;
-	public final static short IS_UPDATEABLE = 8;
-	public final static short IS_LOCKED = 9;
-	public final static short IS_REMOVEABLE = 10;
-	public final static short IS_DELETEABLE = 11;
-	public final static short GET = 12;
-	public final static short QUERY = 13;
-	public final static short COUNT = 14;
-	
+	public final static short LOCK = 5;
+	public final static short UPDATE = 10;
+	public final static short UNLOCK = 15;
+	public final static short DELETE = 20;
+	public final static short IS_EXISTS = 25;
+	public final static short IS_UPDATEABLE = 30;
+	public final static short IS_LOCKED = 35;
+	public final static short IS_DELETEABLE = 40;
+	public final static short GET = 45;
+	public final static short QUERY = 50;
+	public final static short COUNT = 55;
+
 }
