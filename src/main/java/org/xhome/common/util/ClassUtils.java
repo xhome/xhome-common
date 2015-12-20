@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -17,21 +17,26 @@ import java.util.jar.JarFile;
  * @date Feb 9, 201310:37:06 PM
  */
 public final class ClassUtils {
-	
-	private ClassUtils() {}
-	
+
+	private ClassUtils() {
+	}
+
 	public static Set<Class<?>> findClasses(Class<?> parent) {
 		String packageName = parent.getPackage().getName();
 		return findClasses(packageName, parent);
 	}
-	
+
 	public static Set<Class<?>> findClasses(String packageName) {
 		return findClasses(packageName, null);
 	}
-	
+
 	public static Set<Class<?>> findClasses(String packageName, Class<?> parent) {
 		try {
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			ClassLoader contextCL = Thread.currentThread()
+					.getContextClassLoader();
+			ClassLoader loader = contextCL == null ? ClassUtils.class
+					.getClassLoader() : contextCL;
+
 			String path = packageName.replaceAll("\\.", "/");
 			Enumeration<URL> resources = loader.getResources(path);
 			Set<Class<?>> returnClasses = new LinkedHashSet<Class<?>>();
@@ -44,14 +49,15 @@ public final class ClassUtils {
 				}
 			}
 			return returnClasses;
-		} catch (IOException e) {}
+		} catch (IOException e) {
+		}
 		return null;
 	}
-	
+
 	public static Set<Class<?>> findClasses(URL resource, String packageName) {
 		return findClasses(resource, packageName, null);
 	}
-	
+
 	public static Set<Class<?>> findClasses(URL resource, String packageName,
 			Class<?> parent) {
 		String type = resource.getProtocol(), file = resource.getFile();
@@ -62,21 +68,22 @@ public final class ClassUtils {
 		} else if ("jar".equals(type)) {
 			int index = file.indexOf("jar!") + 3;
 			String pathName = file.substring(index + 2);
-			if (pathName.equals(packageName.replaceAll("\\.", "/"))) {
+			if (pathName.startsWith(packageName.replaceAll("\\.", "/"))) {
 				JarFile jar;
 				try {
 					jar = new JarFile(file.substring(5, index));
 					classes = findClassesFromJar(jar, pathName, parent);
-				} catch (IOException e) {}
+				} catch (IOException e) {
+				}
 			}
 		}
 		return classes;
 	}
-	
+
 	public static Set<Class<?>> findClassesFromJar(JarFile jar, String pathName) {
 		return findClassesFromJar(jar, pathName, null);
 	}
-	
+
 	public static Set<Class<?>> findClassesFromJar(JarFile jar,
 			String pathName, Class<?> parent) {
 		Enumeration<JarEntry> entries = jar.entries();
@@ -95,21 +102,24 @@ public final class ClassUtils {
 									.equals(parent))) {
 						classes.add(clazz);
 					}
-				} catch (ClassNotFoundException e) {}
+				} catch (ClassNotFoundException e) {
+				}
 			}
 		}
 		return classes;
 	}
-	
+
 	public static Set<Class<?>> findClassesFromDirectory(File dir,
 			String packageName) {
 		return findClassesFromDirectory(dir, packageName, null);
 	}
-	
+
 	public static Set<Class<?>> findClassesFromDirectory(File dir,
 			String packageName, Class<?> parent) {
 		File[] files = dir.listFiles();
-		if (files == null || files.length == 0) { return null; }
+		if (files == null || files.length == 0) {
+			return null;
+		}
 		Set<Class<?>> returnClasses = new LinkedHashSet<Class<?>>();
 		packageName = (packageName.equals("") || packageName.endsWith(".")) ? packageName
 				: packageName + ".";
@@ -130,18 +140,17 @@ public final class ClassUtils {
 									.equals(parent))) {
 						returnClasses.add(clazz);
 					}
-				} catch (ClassNotFoundException e) {}
+				} catch (ClassNotFoundException e) {
+				}
 			}
 		}
 		return returnClasses;
 	}
-	
+
 	/**
-	 * Load resources by given name resourceName.
-	 * If no results are found,the recources name is prepended by '/' and tried
-	 * again
-	 * This method will try to load the recources using the following methods(in
-	 * order):
+	 * Load resources by given name resourceName. If no results are found,the
+	 * recources name is prepended by '/' and tried again This method will try
+	 * to load the recources using the following methods(in order):
 	 * <ul>
 	 * <li>From Thread.currentThread().getContextClassLoader()
 	 * <li>From ClassLoaderUtil.class.getClassLoader()
@@ -155,21 +164,23 @@ public final class ClassUtils {
 	 * @return
 	 */
 	public static URL getResources(String resourceName, Class<?> callingClass) {
-		URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+		URL url = Thread.currentThread().getContextClassLoader()
+				.getResource(resourceName);
 		if (url == null) {
 			url = ClassUtils.class.getClassLoader().getResource(resourceName);
 		}
 		if (url == null) {
 			ClassLoader cl = callingClass.getClassLoader();
-			if (cl != null) url = cl.getResource(resourceName);
+			if (cl != null)
+				url = cl.getResource(resourceName);
 		}
 		if (url == null
 				&& resourceName != null
-				&& (resourceName.length() == 0 || resourceName.charAt(0) != '/')) return getResources(
-				'/' + resourceName, callingClass);
+				&& (resourceName.length() == 0 || resourceName.charAt(0) != '/'))
+			return getResources('/' + resourceName, callingClass);
 		return url;
 	}
-	
+
 	/**
 	 * load resources as stream
 	 * 
@@ -184,13 +195,14 @@ public final class ClassUtils {
 		URL url = getResources(resourceName, callingClass);
 		try {
 			return url != null ? url.openStream() : null;
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 		return null;
 	}
-	
+
 	/**
-	 * Load a class with a given name.
-	 * It will try to load the class in the following order:
+	 * Load a class with a given name. It will try to load the class in the
+	 * following order:
 	 * <ul>
 	 * <li>From Thread.currentThread().getContextClassLoader()
 	 * <li>Using the basic Class.forName()
@@ -208,18 +220,23 @@ public final class ClassUtils {
 	public static Class<?> loadClass(String className, Class<?> callingClass)
 			throws ClassNotFoundException {
 		try {
-			return Thread.currentThread().getContextClassLoader().loadClass(className);
+			ClassLoader contextCL = Thread.currentThread()
+					.getContextClassLoader();
+			ClassLoader loader = contextCL == null ? ClassUtils.class
+					.getClassLoader() : contextCL;
+			return loader.loadClass(className);
 		} catch (ClassNotFoundException e) {
 			try {
 				return Class.forName(className);
 			} catch (ClassNotFoundException ex) {
 				try {
-					return ClassUtils.class.getClassLoader().loadClass(className);
+					return ClassUtils.class.getClassLoader().loadClass(
+							className);
 				} catch (ClassNotFoundException exc) {
 					return callingClass.getClassLoader().loadClass(className);
 				}
 			}
 		}
 	}
-	
+
 }
