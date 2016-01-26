@@ -93,7 +93,7 @@ public abstract class Base implements java.io.Serializable {
 	public String getCreatedStr() {
 		if (created == null)
 			return "";
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return format.format(created);
 	}
 }
